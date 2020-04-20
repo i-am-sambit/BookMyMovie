@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Book my Movie</string>
+    <string name="title_home">Home</string>
+    <string name="title_upcoming">Upcoming</string>
+    <string name="title_search">Search</string>
+    <string name="title_profile">Profile</string>
+
+    <string name="category_name">Trending</string>
+    <string name="movie_name">Avengers Endgame</string>
+    <string name="release_date">Releasing on 12 March</string>
+    <string name="overview">Overview</string>
+    <string name="todo">TODO</string>
+    <string name="loader_message">Loading...</string>
+
+</resources>
