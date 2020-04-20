@@ -25,7 +25,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
         NetworkManager(url).makeRequest<HomeResponse> { result ->
             when (result) {
                 is Result.Success -> {
-                    categories.add(MovieCategory(1,"Popular", result.response.results))
+                    categories.add(MovieCategory(1,"Popular", result.response.movies))
                     categories = categories
                 }
 
@@ -41,7 +41,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
         NetworkManager(url).makeRequest<HomeResponse> { result ->
             when (result) {
                 is Result.Success -> {
-                    categories.add(MovieCategory(1,"Popular", result.response.results))
+                    categories.add(MovieCategory(1,"Popular", result.response.movies))
                     categories = categories
                 }
 
@@ -57,7 +57,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
         NetworkManager(url).makeRequest<HomeResponse> { result ->
             when (result) {
                 is Result.Success -> {
-                    categories.add(MovieCategory(1,"Popular", result.response.results))
+                    categories.add(MovieCategory(1,"Popular", result.response.movies))
                     categories = categories
                 }
 

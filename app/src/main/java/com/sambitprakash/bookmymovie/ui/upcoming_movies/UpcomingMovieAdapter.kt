@@ -25,7 +25,7 @@ class UpcomingMovieAdapter(private val movies: ArrayList<Movie>): RecyclerView.A
         holderUpcoming.movieName.text = movie.title
         holderUpcoming.overview.text = movie.overview
 
-        val posterUrl = "https://image.tmdb.org/t/p/w300_and_h300_bestv2" + movie.poster_path
+        val posterUrl = "https://image.tmdb.org/t/p/w300_and_h300_bestv2" + movie.posterPath
         Picasso.get().load(posterUrl).into(holderUpcoming.posterImageView)
     }
 }

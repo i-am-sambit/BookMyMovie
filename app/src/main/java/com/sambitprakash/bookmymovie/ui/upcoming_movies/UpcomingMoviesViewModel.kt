@@ -17,7 +17,7 @@ class UpcomingMoviesViewModel(private val presenter: UpcomingMoviePresenter) : V
         val url = "https://api.themoviedb.org/3/movie/popular?api_key=5a439649b46466212e07515d87737c1a&language=en-US&page=1"
         NetworkManager(url).makeRequest<MoviesResponse> { result ->
             when (result) {
-                is Result.Success -> presenter.show(result.response.results)
+                is Result.Success -> presenter.show(result.response.movies)
                 is Result.Failure -> presenter.showError(result.response.message ?: "")
             }
         }

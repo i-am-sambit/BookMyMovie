@@ -1,12 +1,16 @@
 package com.sambitprakash.bookmymovie.ui.upcoming_movies
 
-class MoviesResponse(val page: Int,
-                     val total_results: Int,
-                     val total_pages: Int,
-                     val results: ArrayList<Movie>)
+import com.google.gson.annotations.SerializedName
 
-class Movie(val id: Int,
-            val title: String,
-            val overview: String,
-            val poster_path: String,
-            val release_date: String)
+data class MoviesResponse(
+    @SerializedName("page") val page: Int,
+    @SerializedName("total_results") val totalResults: Int,
+    @SerializedName("total_pages") val totalPages: Int,
+    @SerializedName("results") val movies: ArrayList<Movie>)
+
+data class Movie(
+    @SerializedName("id") val id: Int,
+    @SerializedName("title") val title: String,
+    @SerializedName("overview") val overview: String,
+    @SerializedName("poster_path") val posterPath: String,
+    @SerializedName("release_date") val releaseDate: String)

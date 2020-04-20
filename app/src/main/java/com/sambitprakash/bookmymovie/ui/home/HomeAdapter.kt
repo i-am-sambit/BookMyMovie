@@ -26,7 +26,7 @@ class HomeAdapter(private val movies: ArrayList<HomeMovie>): RecyclerView.Adapte
         holderHome.itemView.textView_movieName_home.text = movie.title
         holderHome.itemView.textView_overview_home.text = movie.overview
 
-        val posterUrl = "https://image.tmdb.org/t/p/w300_and_h300_bestv2" + movie.poster_path
+        val posterUrl = "https://image.tmdb.org/t/p/w300_and_h300_bestv2" + movie.posterPath
         Picasso.get().load(posterUrl).into(holderHome.itemView.imageView_poster_home)
     }
 }
