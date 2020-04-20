@@ -3,7 +3,7 @@ package com.sambitprakash.bookmymovie.ui.home
 import com.google.gson.annotations.SerializedName
 
 
-class MovieCategory(
+data class MovieCategory(
     val id: Int,
     val name: String,
     val movies: ArrayList<HomeMovie>)
