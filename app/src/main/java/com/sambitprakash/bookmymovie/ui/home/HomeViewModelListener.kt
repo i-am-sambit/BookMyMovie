@@ -1,6 +1,6 @@
 package com.sambitprakash.bookmymovie.ui.home
 
-interface HomePresenter {
+interface HomeViewModelListener {
     fun show(homeMovies: ArrayList<MovieCategory>)
     fun showError(message: String)
 }

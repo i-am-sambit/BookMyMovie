@@ -5,12 +5,12 @@ import com.sambitprakash.bookmymovie.networkManager.NetworkManager
 import com.sambitprakash.bookmymovie.networkManager.Result
 import kotlin.properties.Delegates
 
-class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
+class HomeViewModel(private val viewModelListener: HomeViewModelListener) : ViewModel() {
     private var categories: ArrayList<MovieCategory> by Delegates.observable(ArrayList()) {
         _, _, newValue ->
         if (newValue.size == 3) {
             newValue.sortBy { it.id }
-            presenter.show(newValue)
+            viewModelListener.show(newValue)
         }
     }
 
@@ -22,7 +22,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
 
     private fun fetchPopularMovies() {
         val url = "https://api.themoviedb.org/3/movie/popular?api_key=5a439649b46466212e07515d87737c1a&language=en-US&page=1"
-        NetworkManager(url).makeRequest<HomeResponse> { result ->
+        NetworkManager(url).makeRequest<Nothing, HomeResponse> { result ->
             when (result) {
                 is Result.Success -> {
                     categories.add(MovieCategory(1,"Popular", result.response.movies))
@@ -30,7 +30,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
                 }
 
                 is Result.Failure -> {
-                    presenter.showError(result.response.message ?: "")
+                    viewModelListener.showError(result.response.message ?: "")
                 }
             }
         }
@@ -38,7 +38,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
 
     private fun fetchNowPlayingMovies() {
         val url = "https://api.themoviedb.org/3/movie/now_playing?api_key=5a439649b46466212e07515d87737c1a&language=en-US&page=1"
-        NetworkManager(url).makeRequest<HomeResponse> { result ->
+        NetworkManager(url).makeRequest<Nothing, HomeResponse> { result ->
             when (result) {
                 is Result.Success -> {
                     categories.add(MovieCategory(1,"Popular", result.response.movies))
@@ -46,7 +46,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
                 }
 
                 is Result.Failure -> {
-                    presenter.showError(result.response.message ?: "")
+                    viewModelListener.showError(result.response.message ?: "")
                 }
             }
         }
@@ -54,7 +54,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
 
     private fun fetchTopRatedMovies() {
         val url = "https://api.themoviedb.org/3/movie/top_rated?api_key=5a439649b46466212e07515d87737c1a&language=en-US&page=1"
-        NetworkManager(url).makeRequest<HomeResponse> { result ->
+        NetworkManager(url).makeRequest<Nothing, HomeResponse> { result ->
             when (result) {
                 is Result.Success -> {
                     categories.add(MovieCategory(1,"Popular", result.response.movies))
@@ -62,7 +62,7 @@ class HomeViewModel(private val presenter: HomePresenter) : ViewModel() {
                 }
 
                 is Result.Failure -> {
-                    presenter.showError(result.response.message ?: "")
+                    viewModelListener.showError(result.response.message ?: "")
                 }
             }
         }

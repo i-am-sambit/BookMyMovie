@@ -10,7 +10,7 @@ import com.sambitprakash.bookmymovie.MainActivity
 import com.sambitprakash.bookmymovie.R
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), HomePresenter {
+class HomeFragment : Fragment(), HomeViewModelListener {
 
     private lateinit var homeViewModel: HomeViewModel
 

@@ -10,7 +10,7 @@ import com.sambitprakash.bookmymovie.MainActivity
 import com.sambitprakash.bookmymovie.R
 import kotlinx.android.synthetic.main.fragment_upcoming_movie.*
 
-class UpcomingMoviesFragment : Fragment(), UpcomingMoviePresenter {
+class UpcomingMoviesFragment : Fragment(), UpcomingMovieViewModelListener {
 
     private var dashboardViewModel = UpcomingMoviesViewModel(this)
 
