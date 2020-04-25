@@ -23,7 +23,7 @@ class UpcomingMovieAdapter(private val movies: ArrayList<Movie>): RecyclerView.A
     override fun onBindViewHolder(holderUpcoming: UpcomingMovieViewHolder, position: Int) {
         val movie = movies[position]
         holderUpcoming.movieName.text = movie.title
-        holderUpcoming.overview.text = movie.overview
+        holderUpcoming.overview.text = movie.releaseDate
 
         val posterUrl = "https://image.tmdb.org/t/p/w300_and_h300_bestv2" + movie.posterPath
         Picasso.get().load(posterUrl).into(holderUpcoming.posterImageView)

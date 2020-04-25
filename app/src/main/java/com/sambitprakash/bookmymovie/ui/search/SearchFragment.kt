@@ -1,20 +1,21 @@
 package com.sambitprakash.bookmymovie.ui.search
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.SearchView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.sambitprakash.bookmymovie.MainActivity
 import com.sambitprakash.bookmymovie.R
+import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), SearchViewModelListener, SearchView.OnQueryTextListener {
 
-    companion object {
-        fun newInstance() = SearchFragment()
-    }
-
-    private lateinit var viewModel: SearchViewModel
+    private var viewModel: SearchViewModel = SearchViewModel(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,8 +26,35 @@ class SearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = SearchViewModel()
+        searchRecyclerView.layoutManager = LinearLayoutManager(this.activity, LinearLayoutManager.VERTICAL, false)
 
+        val divider = DividerItemDecoration(this.activity, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(ColorDrawable(requireActivity().getColor(R.color.colorRowDivider)))
+        searchRecyclerView.addItemDecoration(divider)
+    }
+
+    override fun show(movies: ArrayList<SearchMovie>) {
+        this.activity?.runOnUiThread {
+            (this.activity as MainActivity).loader.dismiss()
+            searchRecyclerView.adapter = SearchAdapter(movies)
+        }
+    }
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+        return false
+    }
+
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        println("Inside On Query Text Submit")
+        if (p0 != null) {
+            viewModel.searchMovie(p0)
+            (this.activity as MainActivity).loader.start()
+        }
+        return false
+    }
+
+    override fun showError(message: String) {
+        println("Error : $message")
     }
 
 }

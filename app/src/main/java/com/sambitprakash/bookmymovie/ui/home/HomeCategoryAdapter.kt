@@ -29,8 +29,12 @@ class HomeCategoryAdapter(private val context: Context?,
         holder.itemView.recyclerView_category.layoutManager = layoutManager
         holder.itemView.recyclerView_category.addItemDecoration(HomeGridItemDecorator(30))
 
-        holder.itemView.recyclerView_category.adapter = HomeAdapter(categories[position].movies)
-        holder.itemView.textView_section.text = categories[position].name
+        if (position == 0) {
+            holder.itemView.recyclerView_category.adapter = HomeTrendingAdapter(categories[0].movies)
+        } else {
+            holder.itemView.recyclerView_category.adapter = HomeAdapter(categories[position].movies)
+            holder.itemView.textView_section.text = categories[position].name
+        }
 
     }
 }

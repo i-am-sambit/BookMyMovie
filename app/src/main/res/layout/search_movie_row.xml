@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary" >
+
+    <ImageView
+        android:id="@+id/imageView_poster_search"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/todo"
+        android:cropToPadding="true"
+        android:scaleType="fitXY"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_movieName_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="5dp"
+        android:text="@string/movie_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView_poster_search"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_overview_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="3"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="20dp"
+        android:text="@string/release_date"
+        android:textColor="#A8A8A8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView_poster_search"
+        app:layout_constraintTop_toBottomOf="@+id/textView_movieName_search" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
