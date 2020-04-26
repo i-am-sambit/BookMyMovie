@@ -12,10 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sambitprakash.bookmymovie.MainActivity
 import com.sambitprakash.bookmymovie.R
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlin.collections.ArrayList
+import androidx.lifecycle.Observer
+import com.sambitprakash.bookmymovie.BaseFragment
 
-class SearchFragment : Fragment(), SearchViewModelListener {
+class SearchFragment : Fragment(), BaseFragment {
 
-    private var viewModel: SearchViewModel = SearchViewModel(this)
+    private lateinit var viewModel: SearchViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +29,21 @@ class SearchFragment : Fragment(), SearchViewModelListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        initialSetup()
+        setSearchViewObservers()
+        setDataSourceObservers()
+    }
+
+     override fun initialSetup() {
+        viewModel = SearchViewModel(this.requireActivity())
         searchRecyclerView.layoutManager = LinearLayoutManager(this.activity, LinearLayoutManager.VERTICAL, false)
 
         val divider = DividerItemDecoration(this.activity, DividerItemDecoration.VERTICAL)
         divider.setDrawable(ColorDrawable(requireActivity().getColor(R.color.colorRowDivider)))
         searchRecyclerView.addItemDecoration(divider)
+    }
 
+    private fun setSearchViewObservers() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
                 return false
@@ -47,15 +59,18 @@ class SearchFragment : Fragment(), SearchViewModelListener {
         })
     }
 
-    override fun show(movies: ArrayList<SearchMovie>) {
-        this.activity?.runOnUiThread {
+     override fun setDataSourceObservers() {
+        val moviesObserver = Observer<ArrayList<SearchMovie>> {
             (this.activity as MainActivity).loader.dismiss()
-            searchRecyclerView.adapter = SearchAdapter(movies)
+            searchRecyclerView.adapter = SearchAdapter(viewModel.movies.value ?: ArrayList())
         }
-    }
+        viewModel.movies.observe(viewLifecycleOwner, moviesObserver)
 
-    override fun showError(message: String) {
-        println("Error : $message")
+        val errorObserver = Observer<String> {
+            (this.activity as MainActivity).loader.dismiss()
+            //TODO : Show Error message in UI
+        }
+        viewModel.errorMessage.observe(viewLifecycleOwner, errorObserver)
     }
 
 }

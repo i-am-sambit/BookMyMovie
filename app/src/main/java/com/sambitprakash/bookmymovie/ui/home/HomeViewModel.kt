@@ -1,18 +1,20 @@
 package com.sambitprakash.bookmymovie.ui.home
 
+import android.app.Activity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sambitprakash.bookmymovie.networkManager.NetworkManager
-import com.sambitprakash.bookmymovie.networkManager.Result
-import kotlin.properties.Delegates
+import com.sambitprakash.bookmymovie.repositoryFacade.networkRepository.NetworkManager
+import com.sambitprakash.bookmymovie.repositoryFacade.networkRepository.Result
 
-class HomeViewModel(private val viewModelListener: HomeViewModelListener) : ViewModel() {
-    private var categories: ArrayList<MovieCategory> by Delegates.observable(ArrayList()) {
-        _, _, newValue ->
-        if (newValue.size == 4) {
-            newValue.sortBy { it.id }
-            viewModelListener.show(newValue)
-        }
+class HomeViewModel(private val activity: Activity) : ViewModel() {
+    private var mCategories = MutableLiveData<ArrayList<MovieCategory>>()
+    val categories: LiveData<ArrayList<MovieCategory>> = mCategories
+
+    private var mErrorMessage = MutableLiveData<String>().apply {
+        value = ""
     }
+    val errorMessage: LiveData<String> = mErrorMessage
 
     init {
         fetchTrendingMovies()
@@ -24,14 +26,15 @@ class HomeViewModel(private val viewModelListener: HomeViewModelListener) : View
     private fun fetchTrendingMovies() {
         val url = "https://api.themoviedb.org/3/trending/movie/week?api_key=5a439649b46466212e07515d87737c1a"
         NetworkManager(url).makeRequest<Nothing, HomeResponse> { result ->
-            when (result) {
-                is Result.Success -> {
-                    categories.add(MovieCategory(0,"Popular", result.response.movies))
-                    categories = categories
-                }
+            activity.runOnUiThread {
+                when (result) {
+                    is Result.Success -> {
+                        add(MovieCategory(0,"", result.response.movies))
+                    }
 
-                is Result.Failure -> {
-                    viewModelListener.showError(result.response.message ?: "")
+                    is Result.Failure -> {
+                        mErrorMessage.value = result.response.message ?: ""
+                    }
                 }
             }
         }
@@ -40,14 +43,15 @@ class HomeViewModel(private val viewModelListener: HomeViewModelListener) : View
     private fun fetchPopularMovies() {
         val url = "https://api.themoviedb.org/3/movie/popular?api_key=5a439649b46466212e07515d87737c1a&language=en-US&page=1"
         NetworkManager(url).makeRequest<Nothing, HomeResponse> { result ->
-            when (result) {
-                is Result.Success -> {
-                    categories.add(MovieCategory(2,"Popular", result.response.movies))
-                    categories = categories
-                }
+            activity.runOnUiThread {
+                when (result) {
+                    is Result.Success -> {
+                        add(MovieCategory(2, "Popular", result.response.movies))
+                    }
 
-                is Result.Failure -> {
-                    viewModelListener.showError(result.response.message ?: "")
+                    is Result.Failure -> {
+                        mErrorMessage.value = result.response.message ?: ""
+                    }
                 }
             }
         }
@@ -56,14 +60,15 @@ class HomeViewModel(private val viewModelListener: HomeViewModelListener) : View
     private fun fetchNowPlayingMovies() {
         val url = "https://api.themoviedb.org/3/movie/now_playing?api_key=5a439649b46466212e07515d87737c1a&language=en-US&page=1"
         NetworkManager(url).makeRequest<Nothing, HomeResponse> { result ->
-            when (result) {
-                is Result.Success -> {
-                    categories.add(MovieCategory(1,"Now Playing", result.response.movies))
-                    categories = categories
-                }
+            activity.runOnUiThread {
+                when (result) {
+                    is Result.Success -> {
+                        add(MovieCategory(1,"Now Playing", result.response.movies))
+                    }
 
-                is Result.Failure -> {
-                    viewModelListener.showError(result.response.message ?: "")
+                    is Result.Failure -> {
+                        mErrorMessage.value = result.response.message ?: ""
+                    }
                 }
             }
         }
@@ -72,17 +77,27 @@ class HomeViewModel(private val viewModelListener: HomeViewModelListener) : View
     private fun fetchTopRatedMovies() {
         val url = "https://api.themoviedb.org/3/movie/top_rated?api_key=5a439649b46466212e07515d87737c1a&language=en-US&page=1"
         NetworkManager(url).makeRequest<Nothing, HomeResponse> { result ->
-            when (result) {
-                is Result.Success -> {
-                    categories.add(MovieCategory(3,"Top Rated", result.response.movies))
-                    categories = categories
-                }
+            activity.runOnUiThread {
+                when (result) {
+                    is Result.Success -> {
+                        add(MovieCategory(3,"Top Rated", result.response.movies))
+                    }
 
-                is Result.Failure -> {
-                    viewModelListener.showError(result.response.message ?: "")
+                    is Result.Failure -> {
+                        mErrorMessage.value = result.response.message ?: ""
+                    }
                 }
             }
         }
+    }
+
+    private fun add(category: MovieCategory) {
+        if (mCategories.value == null) {
+            mCategories.value = arrayListOf(category)
+        } else {
+            mCategories.value?.add(category)
+        }
+        mCategories.value?.sortBy { it.id }
     }
 
 }

@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sambitprakash.bookmymovie.BaseFragment
 import com.sambitprakash.bookmymovie.MainActivity
 import com.sambitprakash.bookmymovie.R
 import kotlinx.android.synthetic.main.fragment_upcoming_movie.*
 
-class UpcomingMoviesFragment : Fragment(), UpcomingMovieViewModelListener {
+class UpcomingMoviesFragment : Fragment(), BaseFragment {
     private lateinit var mViewModel: UpcomingMoviesViewModel
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -22,31 +23,32 @@ class UpcomingMoviesFragment : Fragment(), UpcomingMovieViewModelListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initialSetUp()
+        initialSetup()
         fetchUpcomingMovies()
     }
 
-    private fun initialSetUp() {
-        mViewModel = UpcomingMoviesViewModel(this, this.requireActivity())
+    override fun initialSetup() {
+        mViewModel = UpcomingMoviesViewModel(this.requireActivity())
         moviesRecyclerView.layoutManager = LinearLayoutManager(this.activity)
     }
 
     private fun fetchUpcomingMovies() {
         mViewModel.fetchUpcomingMovies()
         (this.activity as MainActivity).loader.start()
+    }
 
+    override fun setDataSourceObservers() {
         val moviesObserver = Observer<ArrayList<Movie>> {
             (this.activity as MainActivity).loader.dismiss()
             moviesRecyclerView.adapter = UpcomingMovieAdapter(mViewModel.movies.value ?: ArrayList())
         }
         mViewModel.movies.observe(viewLifecycleOwner, moviesObserver)
+
+        val errorObserver = Observer<String> {
+            (this.activity as MainActivity).loader.dismiss()
+            //TODO : Show Error message in UI
+        }
+        mViewModel.errorMessage.observe(viewLifecycleOwner, errorObserver)
     }
 
-    override fun show(movies: ArrayList<Movie>) {
-
-    }
-
-    override fun showError(message: String) {
-
-    }
 }

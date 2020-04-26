@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sambitprakash.bookmymovie.BaseFragment
 import com.sambitprakash.bookmymovie.MainActivity
 import com.sambitprakash.bookmymovie.R
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), HomeViewModelListener {
+class HomeFragment : Fragment(), BaseFragment {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var mHomeViewModel: HomeViewModel
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -23,22 +25,30 @@ class HomeFragment : Fragment(), HomeViewModelListener {
     override fun onViewCreated(view: View,
                                savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initialSetup()
+        setDataSourceObservers()
+    }
+
+    override fun initialSetup() {
         val layoutManager = LinearLayoutManager(
             this.context, LinearLayoutManager.VERTICAL, false)
         moviesRecyclerView.layoutManager = layoutManager
 
-        homeViewModel = HomeViewModel(this)
+        mHomeViewModel = HomeViewModel(this.requireActivity())
         (this.activity as MainActivity).loader.start()
     }
 
-    override fun show(homeMovies: ArrayList<MovieCategory>) {
-        this.activity?.runOnUiThread {
+    override fun setDataSourceObservers() {
+        val categoryObserver = Observer { categories: ArrayList<MovieCategory> ->
             (this.activity as MainActivity).loader.dismiss()
-            moviesRecyclerView.adapter = HomeCategoryAdapter(this.context, homeMovies)
+            moviesRecyclerView.adapter = HomeCategoryAdapter(this.context, categories)
         }
-    }
+        mHomeViewModel.categories.observe(viewLifecycleOwner, categoryObserver)
 
-    override fun showError(message: String) {
-
+        val errorObserver = Observer { message: String ->
+            (this.activity as MainActivity).loader.dismiss()
+            println(message)
+        }
+        mHomeViewModel.errorMessage.observe(viewLifecycleOwner, errorObserver)
     }
 }
