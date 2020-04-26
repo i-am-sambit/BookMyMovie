@@ -1,6 +1,7 @@
 package com.sambitprakash.bookmymovie.ui.home
 
 import android.content.Context
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class HomeCategoryAdapter(private val context: Context?,
         holder.itemView.recyclerView_category.addItemDecoration(HomeGridItemDecorator(30))
 
         if (position == 0) {
+            holder.itemView.textView_section.visibility = View.GONE
             holder.itemView.recyclerView_category.adapter = HomeTrendingAdapter(categories[0].movies)
         } else {
             holder.itemView.recyclerView_category.adapter = HomeAdapter(categories[position].movies)

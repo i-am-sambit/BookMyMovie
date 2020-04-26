@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sambitprakash.bookmymovie.MainActivity
 import com.sambitprakash.bookmymovie.R
 import kotlinx.android.synthetic.main.fragment_upcoming_movie.*
 
 class UpcomingMoviesFragment : Fragment(), UpcomingMovieViewModelListener {
-
-    private var dashboardViewModel = UpcomingMoviesViewModel(this)
+    private lateinit var mViewModel: UpcomingMoviesViewModel
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -22,16 +22,28 @@ class UpcomingMoviesFragment : Fragment(), UpcomingMovieViewModelListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initialSetUp()
+        fetchUpcomingMovies()
+    }
+
+    private fun initialSetUp() {
+        mViewModel = UpcomingMoviesViewModel(this, this.requireActivity())
         moviesRecyclerView.layoutManager = LinearLayoutManager(this.activity)
-        dashboardViewModel.fetchUpcomingMovies()
+    }
+
+    private fun fetchUpcomingMovies() {
+        mViewModel.fetchUpcomingMovies()
         (this.activity as MainActivity).loader.start()
+
+        val moviesObserver = Observer<ArrayList<Movie>> {
+            (this.activity as MainActivity).loader.dismiss()
+            moviesRecyclerView.adapter = UpcomingMovieAdapter(mViewModel.movies.value ?: ArrayList())
+        }
+        mViewModel.movies.observe(viewLifecycleOwner, moviesObserver)
     }
 
     override fun show(movies: ArrayList<Movie>) {
-        this.activity?.runOnUiThread {
-            (this.activity as MainActivity).loader.dismiss()
-            moviesRecyclerView.adapter = UpcomingMovieAdapter(movies)
-        }
+
     }
 
     override fun showError(message: String) {
