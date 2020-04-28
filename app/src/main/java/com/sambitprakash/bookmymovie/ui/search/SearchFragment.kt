@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sambitprakash.bookmymovie.MainActivity
@@ -66,9 +67,9 @@ class SearchFragment : Fragment(), BaseFragment {
         }
         viewModel.movies.observe(viewLifecycleOwner, moviesObserver)
 
-        val errorObserver = Observer<String> {
+        val errorObserver = Observer<String> { message: String ->
             (this.activity as MainActivity).loader.dismiss()
-            //TODO : Show Error message in UI
+            Toast.makeText(this.activity, message, Toast.LENGTH_LONG).show()
         }
         viewModel.errorMessage.observe(viewLifecycleOwner, errorObserver)
     }

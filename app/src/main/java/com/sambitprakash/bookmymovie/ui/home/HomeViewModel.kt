@@ -11,9 +11,7 @@ class HomeViewModel(private val activity: Activity) : ViewModel() {
     private var mCategories = MutableLiveData<ArrayList<MovieCategory>>()
     val categories: LiveData<ArrayList<MovieCategory>> = mCategories
 
-    private var mErrorMessage = MutableLiveData<String>().apply {
-        value = ""
-    }
+    private var mErrorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = mErrorMessage
 
     init {
@@ -92,12 +90,10 @@ class HomeViewModel(private val activity: Activity) : ViewModel() {
     }
 
     private fun add(category: MovieCategory) {
-        if (mCategories.value == null) {
-            mCategories.value = arrayListOf(category)
-        } else {
-            mCategories.value?.add(category)
-        }
-        mCategories.value?.sortBy { it.id }
+        val movieCategories = mCategories.value ?: ArrayList()
+        movieCategories.add(category)
+        movieCategories.sortBy { it.id }
+        mCategories.value = movieCategories
     }
 
 }
