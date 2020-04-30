@@ -1,14 +1,17 @@
 package com.sambitprakash.bookmymovie.repositoryFacade.networkRepository
 
+import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.sambitprakash.bookmymovie.utils.internetManager.InternetManager
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import java.io.IOException
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class NetworkManager(private val url: String,
-                     private val requestMethod: RequestMethod = RequestMethod.GET) {
+                     private val requestMethod: RequestMethod = RequestMethod.GET,
+                     val context: Context) {
 
     fun <RequestData>createRequest(requestData: RequestData) : Request {
         val body = Gson().toJson(requestData)
@@ -26,6 +29,11 @@ class NetworkManager(private val url: String,
 
     inline fun <RequestData, reified NetworkResponse> makeRequest(requestData: RequestData? = null,
                                                                   crossinline completionHandler: (Result<NetworkResponse, Error>) -> Unit) {
+        if (!InternetManager().isNetworkAvailabe(context)) {
+            completionHandler(Result.Failure(Error("Internet is not available")))
+            return
+        }
+
         val request = createRequest(requestData)
         val client = OkHttpClient()
         client.newCall(request).enqueue(object: Callback {
