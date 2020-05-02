@@ -41,7 +41,7 @@ class HomeAdapter(private val movies: ArrayList<HomeMovie>): RecyclerView.Adapte
 
 class HomeMovieViewHolder(view: View): RecyclerView.ViewHolder(view)
 
-class HomeGridItemDecorator(private val space: Int): RecyclerView.ItemDecoration() {
+class HomeGridItemDecorator(private val space: Int, private val isPagerStyle: Boolean = false): RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -50,13 +50,13 @@ class HomeGridItemDecorator(private val space: Int): RecyclerView.ItemDecoration
     ) {
         super.getItemOffsets(outRect, view, parent, state)
 
-        if (parent.getChildLayoutPosition(view) == 0) {
-            outRect.left = space
-        } else {
-            outRect.left = 0
+        if (!isPagerStyle) {
+            outRect.right = space
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.left = space
+            } else {
+                outRect.left = 0
+            }
         }
-
-        outRect.right = space
-        outRect.top = space
     }
 }

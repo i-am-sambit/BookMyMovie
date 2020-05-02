@@ -27,7 +27,9 @@ class MainActivity : BaseActivity() {
                 R.id.navigation_profile
             )
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        //Commented the below line, as there is no actionbar
+//        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
 }

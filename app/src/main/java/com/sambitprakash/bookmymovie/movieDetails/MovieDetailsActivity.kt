@@ -17,6 +17,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         movie = intent.getSerializableExtra("movie") as MovieInterface
         this.title = movie.title
+        textView_overview_details.text = movie.overview
 
         val posterUrl = "https://image.tmdb.org/t/p/w300_and_h300_bestv2" + movie.posterPath
         Picasso.get().load(posterUrl).into(posterImageView)

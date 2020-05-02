@@ -24,6 +24,9 @@ class HomeTrendingAdapter(private val movies: ArrayList<HomeMovie>): RecyclerVie
 
     override fun onBindViewHolder(holderHome: HomeMovieViewHolder, position: Int) {
         val movie = movies[position]
+
+//        holderHome.itemView.indexTextView.text = "${position+1}" + "/" + "${movies.size}"
+
         val posterUrl = "https://image.tmdb.org/t/p/w300_and_h300_bestv2" + movie.posterPath
         Picasso.get().load(posterUrl).into(holderHome.itemView.imageView_poster_trending_home)
 

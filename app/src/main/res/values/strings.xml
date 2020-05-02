@@ -11,6 +11,11 @@
     <string name="todo">TODO</string>
     <string name="loader_message">Loading</string>
     <string name="name">Name</string>
+
     <string name="search_here">Search Here</string>
+    <string name="password_hint">Enter Password</string>
+    <string name="email_hint">Enter Email</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
 
 </resources>

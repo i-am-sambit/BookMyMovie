@@ -2,12 +2,10 @@ package com.sambitprakash.bookmymovie.dashboard.ui.search
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sambitprakash.bookmymovie.dashboard.MainActivity
@@ -17,8 +15,7 @@ import kotlin.collections.ArrayList
 import androidx.lifecycle.Observer
 import com.sambitprakash.bookmymovie.BaseFragment
 
-class SearchFragment : Fragment(), BaseFragment {
-
+class SearchFragment : BaseFragment() {
     private lateinit var viewModel: SearchViewModel
 
     override fun onCreateView(
@@ -30,9 +27,7 @@ class SearchFragment : Fragment(), BaseFragment {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initialSetup()
         setSearchViewObservers()
-        setDataSourceObservers()
     }
 
      override fun initialSetup() {
@@ -61,15 +56,15 @@ class SearchFragment : Fragment(), BaseFragment {
     }
 
      override fun setDataSourceObservers() {
-        val moviesObserver = Observer<ArrayList<SearchMovie>> {
+        val moviesObserver = Observer { movies: ArrayList<SearchMovie> ->
             (this.activity as MainActivity).loader.dismiss()
-            searchRecyclerView.adapter = SearchAdapter(viewModel.movies.value ?: ArrayList())
+            searchRecyclerView.adapter = SearchAdapter(movies)
         }
         viewModel.movies.observe(viewLifecycleOwner, moviesObserver)
 
-        val errorObserver = Observer<String> { message: String ->
+        val errorObserver = Observer { message: String ->
             (this.activity as MainActivity).loader.dismiss()
-            Toast.makeText(this.activity, message, Toast.LENGTH_LONG).show()
+            this.showToast(message)
         }
         viewModel.errorMessage.observe(viewLifecycleOwner, errorObserver)
     }
